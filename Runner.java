@@ -7,6 +7,12 @@
  * @version 1.0.0
  */
 public class Runner {
+	/**
+	 * Creates a new MainFrame class
+	 * and shows its gui.
+	 *
+	 * @param args Command-line arguments
+	 */
 	public static void main(String[] args) {
 		(new MainFrame()).show();
 	}
