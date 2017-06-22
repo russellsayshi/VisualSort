@@ -14,6 +14,8 @@ import javax.imageio.*;
  */
 public class MainFrame {
 	private JFrame frame;
+	private JPanel mainPanel;
+	private SortCanvas sortCanvas;
 
 	/**
 	 * The default constructor - builds
@@ -45,18 +47,52 @@ public class MainFrame {
 		//Initialize frame & main panel
 		frame = new JFrame("Array Sort Visualizer - russellsayshi");
 		JPanel panel = new JPanel();
+		this.mainPanel = panel;
 		panel.setLayout(new BorderLayout());
 		frame.setContentPane(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setIcon();
 
 		//Add components to frame
-		panel.add(new JPanel(), BorderLayout.NORTH);
-		panel.add(new SortCanvas(), BorderLayout.CENTER);
+		panel.add(generateWaitingPanel(), BorderLayout.NORTH);
+		panel.add((sortCanvas = new SortCanvas()), BorderLayout.CENTER);
 
 		//Place frame on screen
 		frame.pack();
 		frame.setLocationRelativeTo(null);
+	}
+
+	/**
+	 * Generates a JPanel with waiting
+	 * for connection text within it.
+	 *
+	 * @return The generated panel
+	 */
+	private JPanel generateWaitingPanel() {
+		JPanel ret = new JPanel();
+		ret.add(new JLabel("Waiting for connection..."));
+		return ret;
+	}
+
+	/**
+	 * Updates the GUI into connected mode
+	 * where the user can see everything.
+	 * Don't call more than once!
+	 */
+	public void switchToConnectedGUI() {
+		mainPanel.add(new JPanel(), BorderLayout.NORTH);
+		mainPanel.revalidate();
+		sortCanvas.beginRenderThread();
+	}
+
+	/**
+	 * Returns the interface that the connection
+	 * can use to sort the array.
+	 *
+	 * @return The array interface
+	 */
+	public ArrayInterface getArrayInterface() {
+		return sortCanvas;
 	}
 
 	/**

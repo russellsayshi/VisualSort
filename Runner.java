@@ -14,6 +14,12 @@ public class Runner {
 	 * @param args Command-line arguments
 	 */
 	public static void main(String[] args) {
-		(new MainFrame()).show();
+		final MainFrame frame = new MainFrame();
+		frame.show();
+		final ArrayServer server = new ArrayServer(frame.getArrayInterface(), () -> {
+			//on connection
+			frame.switchToConnectedGUI();
+		});
+		server.run(); //do its thing
 	}
 }
