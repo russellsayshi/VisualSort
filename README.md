@@ -1,5 +1,5 @@
 # VisualSort
-Idea to help visualize sorting algorithms for programming classes
+To help visualize sorting algorithms for programming classes. First stable version is out! Enjoy!
 
 ![Screenshot of array being sorted](http://i.imgur.com/g6a3uJ1.png)
 
