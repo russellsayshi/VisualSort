@@ -17,5 +17,6 @@ public interface ConnectionPreferencesListener {
 	 *
 	 * @param delay The delay in MS.
 	 */
+	@Deprecated
 	default public void changeSpeed(int delay) {}
 }
