@@ -16,6 +16,42 @@ public class MainFrame {
 	private JFrame frame;
 	private JPanel mainPanel;
 	private SortCanvas sortCanvas;
+	private ControlsPanel controlsPanel;
+	private UpdateableConnection connection;
+
+	//delays in ms between requests
+	private static final int SPEED_MIN = 300;
+	private static final int SPEED_MAX = 0;
+	private static final int SPEED_DEFAULT = 30;
+
+
+	/**
+	 * Sets the connection that gives the
+	 * frame new information about
+	 * the connection. Don't use this
+	 * unless the previous UpdateableConnection
+	 * is not going to fire any new events,
+	 * because this does not unregister
+	 * preexisting events.
+	 *
+	 * @param connection The new connection
+	 */
+	public void setConnection(UpdateableConnection connection) {
+		connection.addConnectionUpdateListener(controlsPanel
+				.getConnectionUpdateListener());
+		controlsPanel.setConnectionPreferencesListener(connection.getConnectionPreferencesListener());
+		this.connection = connection;
+	}
+
+	/**
+	 * Returns the user preferences, as
+	 * specified by the user in the GUI.
+	 *
+	 * @return The user's prefs.
+	 */
+	public UserPreferences getUserPreferences() {
+		return controlsPanel.getUserPreferences();
+	}
 
 	/**
 	 * The default constructor - builds
@@ -54,35 +90,15 @@ public class MainFrame {
 		setIcon();
 
 		//Add components to frame
-		panel.add(generateWaitingPanel(), BorderLayout.NORTH);
+		controlsPanel = new ControlsPanel();
+		controlsPanel.init("Controls");
+		panel.add(controlsPanel.getComponent(), BorderLayout.NORTH);
 		panel.add((sortCanvas = new SortCanvas()), BorderLayout.CENTER);
+		sortCanvas.beginRenderThread();
 
 		//Place frame on screen
-		frame.pack();
+		frame.setSize(1000, 600);
 		frame.setLocationRelativeTo(null);
-	}
-
-	/**
-	 * Generates a JPanel with waiting
-	 * for connection text within it.
-	 *
-	 * @return The generated panel
-	 */
-	private JPanel generateWaitingPanel() {
-		JPanel ret = new JPanel();
-		ret.add(new JLabel("Waiting for connection..."));
-		return ret;
-	}
-
-	/**
-	 * Updates the GUI into connected mode
-	 * where the user can see everything.
-	 * Don't call more than once!
-	 */
-	public void switchToConnectedGUI() {
-		mainPanel.add(new JPanel(), BorderLayout.NORTH);
-		mainPanel.revalidate();
-		sortCanvas.beginRenderThread();
 	}
 
 	/**
